@@ -10,6 +10,8 @@ Amazon Linux 2 + Nginx + PHP7-fpm + mysql + phpMyAdmin の環境構築
 - MySQL
 - phpMyAdmin
 
+---
+
 ## 設定
 
 Docker Desktop をインストールしてください。
@@ -48,3 +50,11 @@ $ docker-compose ps
 ```
 $ docker-compose down
 ```
+
+---
+
+## バーチャルサーバ
+
+(例)  
+/nginx/conf.d/test.conf  
+サーバ情報を記載することで http://test.localhost:3000 でブラウズ可能
