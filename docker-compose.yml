@@ -1,38 +1,40 @@
-version: "3"
+version: "3.5"
 
 services:
-  web:
-    hostname: amazon-app
+  nginx:
     container_name: amazon-app
-    build: ./nginx
+    build:
+      context: ./docker-image/nginx/
     ports:
-      - "3000:80"
+      - 3000:80
+    volumes:
+      - ./var/www/html:/var/www/html/
+      - ./docker-image/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker-image/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker-image/nginx/conf.d:/etc/nginx/conf.d/
+      - ./log/nginx:/var/log/nginx/
     depends_on:
-      - php
+      - phpfpm
       - mysql
-    links:
-      - php
-      - mysql
-    volumes:
-      #- ./code:/code
-      - ./var/www:/var/www
-      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./nginx/log:/var/log/nginx
 
-  php:
-    hostname: amazon-php
+  phpfpm:
     container_name: amazon-php
-    build: ./php
+    build:
+      context: ./docker-image/php/
+    environment:
+      TZ: "Asia/Tokyo"
     volumes:
-      #- ./code:/code
-      - ./var/www:/var/www
+      - ./var/www/html:/var/www/html/
+      - ./log/php-fpm:/var/log/php-fpm
+      - ./docker-image/php/php-fpm.d:/etc/php-fpm.d/
+    ports:
+      - 9000:80
 
   mysql:
     hostname: amazon-db
     container_name: amazon-db
-    build: ./mysql
+    build:
+      context: ./docker-image/mysql
     volumes:
       - ./mysql/data:/var/lib/mysql
     ports:
@@ -46,7 +48,8 @@ services:
   phpmyadmin:
     hostname: amazon-pma
     container_name: amazon-pma
-    build: ./phpmyadmin
+    build:
+      context: ./docker-image/phpmyadmin
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=mysql
