@@ -1,46 +1,53 @@
-FROM php:7.2-fpm
+FROM amazonlinux:2
 
-# setup php
-RUN apt-get update && apt-get install -y \
-  gcc \
-  make \
-  vim \
-  zip \
-  unzip \
-  iputils-ping \
-  git \
-  curl \
-  libxml2-dev  \
-  libsodium-dev \
-  openssl \
-  libpng-dev \
-  curl \
-  gnupg \
-  libjpeg-dev \
-  libfreetype6-dev \
-  libmagickwand-dev \
-  zlib1g-dev \
-  libfreetype6-dev
+RUN yum -y update
 
-# install php extension
-RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install dom
-RUN docker-php-ext-install exif
-RUN docker-php-ext-install fileinfo
-RUN docker-php-ext-install hash
-RUN docker-php-ext-install json
-RUN docker-php-ext-install mbstring
-RUN docker-php-ext-install mysqli \
-  && docker-php-ext-enable mysqli
-RUN docker-php-ext-install sodium
-RUN docker-php-ext-install xml
-RUN docker-php-ext-install zip
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-RUN docker-php-ext-install -j$(nproc) gd
-RUN docker-php-ext-install iconv
-RUN docker-php-ext-install simplexml
-RUN pecl install imagick
-RUN docker-php-ext-enable imagick
+RUN yum -y install compat-gcc-48
+RUN yum -y install compat-gcc-48-c++
+RUN yum -y install gcc
+RUN yum -y install gcc-c++
+RUN yum -y install zlib-devel
+RUN yum -y install make
+RUN yum -y install wget
+RUN yum -y install tar
+RUN yum -y install php-devel
+RUN yum -y install git
+RUN yum -y install unzip
+RUN yum -y install vim
+RUN yum -y install unzip
+RUN yum -y install curl
+RUN yum -y install gnupg
+RUN yum -y install libjpeg libjpeg-devel
+RUN yum -y install libpng libpng-devel
+RUN yum -y install freetype-devel
+RUN yum -y install gd gd-devel
+RUN yum -y install ImageMagick ImageMagick-devel
+
+# install php7.2
+RUN amazon-linux-extras install php7.2 -y
+
+# use php-fpm default tcp
+EXPOSE 9000
+
+# run php-fpm in the foreground
+ENTRYPOINT /usr/sbin/php-fpm -F
+
+RUN yum -y install php-cli \
+  php-common \
+  php-fpm \
+  php-json \
+  php-mysqlnd \
+  php-pdo \
+  php-devel \
+  php-gd \
+  php-intl \
+  php-mbstring \
+  php-pecl-imagick \
+  php-pecl-imagick-devel \
+  php-pecl-zip \
+  php-xml \
+  php-xmlrpc
 
 # put config
-COPY ./php.ini /usr/local/etc/php/
+COPY ./www.conf /etc/php-fpm.d/www.conf
+COPY ./php.ini /usr/local/etc/php/php.ini
