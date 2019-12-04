@@ -1,4 +1,4 @@
-version: "3.5"
+version: '3.5'
 
 services:
   nginx:
@@ -22,7 +22,7 @@ services:
     build:
       context: ./docker-image/php/
     environment:
-      TZ: "Asia/Tokyo"
+      TZ: 'Asia/Tokyo'
     volumes:
       - ./var/www/html:/var/www/html/
       - ./log/php-fpm:/var/log/php-fpm
@@ -36,9 +36,9 @@ services:
     build:
       context: ./docker-image/mysql
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - ./docker-image//mysql/data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - '3306:3306'
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: docker
@@ -58,6 +58,6 @@ services:
     links:
       - mysql
     ports:
-      - "8080:80"
+      - '8080:80'
     volumes:
       - /sessions
