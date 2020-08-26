@@ -32,7 +32,7 @@ $ docker-compose build --no-cache
 
 #### 起動
 
-- Web: [localhost:3000](http//localhost:3000)
+- Web: [localhost:3000](http://localhost:3000)
 - phpMyAdmin: [localhost:8080](http://localhost:8080)
 
 ```
@@ -50,6 +50,31 @@ $ docker-compose ps
 ```
 $ docker-compose down
 ```
+
+#### コンテナの全削除
+
+```
+$ docker rm -f $(docker ps -a -q)
+```
+
+#### コンテナの一覧取得
+
+```
+$ docker ps -a
+```
+
+#### イメージの全削除
+
+```
+$ docker rmi -f $(docker images -q)
+```
+
+#### イメージの一覧取得
+
+```
+$ docker images -a
+```
+
 
 ---
 
